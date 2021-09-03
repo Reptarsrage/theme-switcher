@@ -1,9 +1,9 @@
 import geocoder
 import requests
-import subprocess
 import sys
 from datetime import datetime, timezone
 import logger
+import subprocess
 
 try:
     # Get current location
@@ -20,7 +20,7 @@ try:
 
     # Determine if nighttime
     useDarkTheme = now > sunset or now < sunrise
-    logger.info(f'Setting dark theme...' if useDarkTheme else 'Setting light theme...')
+    logger.info(f'Setting {"dark" if useDarkTheme else "light"} theme...')
 
     # Set registry key
     # reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize /v AppsUseLightTheme /t REG_DWORD /d 0 /f
