@@ -3,7 +3,7 @@ import requests
 import sys
 from datetime import datetime, timezone
 import logger
-import subprocess
+import subprocessrunner
 
 try:
     # Get current location
@@ -26,7 +26,7 @@ try:
     # reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize /v AppsUseLightTheme /t REG_DWORD /d 0 /f
     regPath = 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize'
     regValue = '0' if useDarkTheme else '1'
-    subprocess.run(['reg', 'add', regPath, '/v', 'AppsUseLightTheme',
+    subprocessrunner.run(['reg', 'add', regPath, '/v', 'AppsUseLightTheme',
                    '/t', 'REG_DWORD', '/d', regValue, '/f'])
 except:
     logger.error('Unexpected error:', sys.exc_info()[0])

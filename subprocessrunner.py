@@ -1,3 +1,5 @@
+import subprocess
+
 def run(command):
     # Prevent cmd.exe window from popping up
     startupinfo = subprocess.STARTUPINFO()
