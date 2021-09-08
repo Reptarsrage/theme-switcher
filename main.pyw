@@ -24,9 +24,12 @@ try:
 
     # Set registry key
     # reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize /v AppsUseLightTheme /t REG_DWORD /d 0 /f
+    # reg add HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize /v SystemUsesLightTheme /t REG_DWORD /d 0 /f
     regPath = 'HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize'
     regValue = '0' if useDarkTheme else '1'
     subprocessrunner.run(['reg', 'add', regPath, '/v', 'AppsUseLightTheme',
+                   '/t', 'REG_DWORD', '/d', regValue, '/f'])
+    subprocessrunner.run(['reg', 'add', regPath, '/v', 'SystemUsesLightTheme',
                    '/t', 'REG_DWORD', '/d', regValue, '/f'])
 except:
     logger.error('Unexpected error:', sys.exc_info()[0])
