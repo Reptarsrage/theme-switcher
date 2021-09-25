@@ -14,9 +14,9 @@ try:
     date = datetime.today().strftime('%Y-%m-%d')
     url = f'https://api.sunrise-sunset.org/json?lat={geoResponse.lat}&lng={geoResponse.lng}&date={date}&formatted=0'
     response = requests.get(url).json()
-    sunset = datetime.fromisoformat(response['results']['sunset'])
-    sunrise = datetime.fromisoformat(response['results']['sunrise'])
-    now = datetime.now(tz=timezone.utc)
+    sunset = datetime.fromisoformat(response['results']['sunset']).replace(tzinfo=None)
+    sunrise = datetime.fromisoformat(response['results']['sunrise']).replace(tzinfo=None)
+    now = datetime.now()
     logger.info(f'Sunset: {sunset} · Sunrise: {sunrise} · Now: {now}')
 
     # Determine if nighttime
