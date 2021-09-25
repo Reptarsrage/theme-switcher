@@ -11,7 +11,8 @@ try:
     logger.info(f'Current location: {geoResponse.latlng}')
 
     # Fetch current sunset/sunrise
-    url = f'https://api.sunrise-sunset.org/json?lat={geoResponse.lat}&lng={geoResponse.lng}&date=today&formatted=0'
+    date = datetime.today().strftime('%Y-%m-%d')
+    url = f'https://api.sunrise-sunset.org/json?lat={geoResponse.lat}&lng={geoResponse.lng}&date={date}&formatted=0'
     response = requests.get(url).json()
     sunset = datetime.fromisoformat(response['results']['sunset'])
     sunrise = datetime.fromisoformat(response['results']['sunrise'])
