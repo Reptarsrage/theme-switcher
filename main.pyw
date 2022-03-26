@@ -1,19 +1,39 @@
 import geocoder
 import requests
 import sys
+import json
 from datetime import datetime, timezone
 import logger
 import subprocessrunner
+from diskcache import Cache
+
+def getCachedApiResponse():
+    # Use cache for api requests
+    cacheDir = './.diskcache'
+    key = 'geocoder'
+    cache = Cache(cacheDir)
+
+    cached = cache.get(key)
+    if (cached is None):
+        # Get current location
+        geoResponse = geocoder.ip('me')
+        logger.info(f'Current location: {geoResponse.latlng}')
+
+        # Fetch current sunset/sunrise
+        date = datetime.today().strftime('%Y-%m-%d')
+        url = f'https://api.sunrise-sunset.org/json?lat={geoResponse.lat}&lng={geoResponse.lng}&date={date}&formatted=0'
+        response = requests.get(url).json()
+
+        # Add to cache for 1 day
+        cache.add(key, json.dumps(response), expire=86400)
+        return response
+    
+    logger.info('Loaded from cache')
+    return json.loads(cached)
 
 try:
-    # Get current location
-    geoResponse = geocoder.ip('me')
-    logger.info(f'Current location: {geoResponse.latlng}')
-
     # Fetch current sunset/sunrise
-    date = datetime.today().strftime('%Y-%m-%d')
-    url = f'https://api.sunrise-sunset.org/json?lat={geoResponse.lat}&lng={geoResponse.lng}&date={date}&formatted=0'
-    response = requests.get(url).json()
+    response = getCachedApiResponse()
     sunset = datetime.fromisoformat(response['results']['sunset'])
     sunrise = datetime.fromisoformat(response['results']['sunrise'])
     now = datetime.now(tz=timezone.utc)
