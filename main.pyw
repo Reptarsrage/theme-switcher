@@ -5,7 +5,12 @@ import json
 from datetime import datetime, timezone
 import logger
 import subprocessrunner
+from datetime import timedelta, datetime
 from diskcache import Cache
+
+def seconds_till_midnight(current_time):
+    midnight = (current_time + timedelta(days=1)).replace(hour=0, minute=0, microsecond=0, second=0)
+    return (midnight - current_time).seconds
 
 def getCachedApiResponse():
     # Use cache for api requests
@@ -25,7 +30,7 @@ def getCachedApiResponse():
         response = requests.get(url).json()
 
         # Add to cache for 1 day
-        cache.add(key, json.dumps(response), expire=86400)
+        cache.add(key, json.dumps(response), expire=seconds_till_midnight(datetime.now()))
         return response
     
     logger.info('Loaded from cache')
